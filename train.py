@@ -89,8 +89,8 @@ def model():
 
 #_______________________training___________________
 
-SR_Path = '/media/aro/New Volume/Super resolution dataset/set5/Train/'
-Valid_path = '/media/aro/New Volume/Super resolution dataset/set5/Valid/'
+SR_Path = '/Super resolution dataset/set5/Train/'
+Valid_path = '/Super resolution dataset/set5/Valid/'
 
 input_SR_paths = [
         os.path.join(SR_Path, fname)
@@ -113,10 +113,7 @@ Valid_generator = OxfordPets(batch_size = train_bsize, img_size = img_size, inpu
 
 model=model()
 
-save = ModelCheckpoint('/media/aro/New Volume/Super resolution dataset/set5/laplacian.hdf5', save_best_only=True)
-
-if os.path.exists('/media/aro/New Volume/Super resolution dataset/set5/laplacian.hdf5'):
-  model.load_weights('/media/aro/New Volume/Super resolution dataset/set5/laplacian.hdf5')
+save = ModelCheckpoint('laplacian.hdf5', save_best_only=True)
 
 lr_rate = keras.optimizers.schedules.ExponentialDecay(
     initial_learning_rate= 0.001,
@@ -133,24 +130,4 @@ plt.title("weighted MSE loss trend")
 plt.ylabel("MSE Value")
 plt.xlabel("No. epoch")
 plt.legend(loc = "upper left")
-plt.show()
-
-s = load_img("/media/aro/New Volume/Super resolution dataset/set5/results/laplacian/baboon.png", target_size=(512,512))
-
-s = get_lowres_image(s,2)
-
-s = np.expand_dims(s,0)
-a = model.predict(s)
-a = np.squeeze(a)
-a1 = np.array(a,np.uint8)
-a2 = np.clip(a,0,1)
-a2 = a2 * 255.0
-a2 = np.uint8(a2)
-
-plt.figure(figsize=(10,10))
-plt.subplot(121)
-plt.imshow(a1)
-plt.subplot(122)
-plt.imshow(a2)
-plt.imsave('/media/aro/New Volume/Super resolution dataset/set5/results/laplacian/baboon_out.png',a2)
 plt.show()
